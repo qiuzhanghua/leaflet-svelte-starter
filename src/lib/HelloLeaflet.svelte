@@ -93,8 +93,16 @@
       L.circle(e.latlng, radius).addTo(map);
       // map.setView(e.latlng, 16);
     });
-
-
+    map.on('locationerror', function (e) {
+      console.log(e);
+      alert(e.message);
+    });
+    map.on('zoomend', function (e) {
+      console.log('zoomend: ', map.getZoom());
+    });
+    map.on('moveend', function (e) {
+      console.log('moveend: ', map.getCenter());
+    });
   });
 </script>
 
