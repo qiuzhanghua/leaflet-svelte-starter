@@ -6,18 +6,19 @@
   import markerIconUrl from '../../node_modules/leaflet/dist/images/marker-icon.png';
   import markerIconRetinaUrl from '../../node_modules/leaflet/dist/images/marker-icon-2x.png';
   import markerShadowUrl from '../../node_modules/leaflet/dist/images/marker-shadow.png';
+  import { expoIn } from 'svelte/easing';
 
-  let map = null;
+  let map: L.Map | L.LayerGroup<any> | null = null;
   onMount(() => {
     map = L.map('map').setView([39.90217, 116.3912757], 8);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
-      attribution:
-        "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
+      // attribution:
+      //   "&copy; <a href='https://www.openstreetmap.org/copyright'>OpenStreetMap</a>",
     }).addTo(map);
-    map.attributionControl.setPrefix(false);
+    // map.attributionControl.setPrefix(false);
     // or
-    // map.attributionControl.setPrefix('qiuzhanghua');
+    map.attributionControl.setPrefix('邱张华');
     L.Icon.Default.prototype.options.iconUrl = markerIconUrl;
     L.Icon.Default.prototype.options.iconRetinaUrl = markerIconRetinaUrl;
     L.Icon.Default.prototype.options.shadowUrl = markerShadowUrl;
@@ -58,6 +59,20 @@
         return feature.properties.show_on_map;
       },
     }).addTo(map);
+    map.on('click', function (e) {
+      if (e.originalEvent.altKey) {
+        alert('zoom level ' + map.getZoom()); 
+      } else {
+        alert('You clicked the map at ' + e.latlng);
+      }
+    });
+
+    map.on('contextmenu', function (e) {
+      L.marker(e.latlng)
+        .addTo(map).bindPopup(e.latlng.toString());
+    });
+
+
   });
 </script>
 
